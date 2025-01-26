@@ -1,0 +1,12 @@
+{
+  "SearchTest": {
+    "BaseUrl": "https://www.google.com/ncr",
+    "SearchFor": "Selenium webdriver"
+  },
+  "UploadFileTest": {
+    "BaseUrl": "https://the-internet.herokuapp.com/"
+  },
+  "DynamicLoadTest": {
+    "BaseUrl": "https://the-internet.herokuapp.com/"
+  }
+}
