@@ -54,28 +54,33 @@ public class Utils
 
 
     }
-    // Method to read URLs from the JSON file
-    public static String getTestData(String testName)
-    {
+    //Method to get Data from Json file
+    public static String getTestData(String Data) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             // Parse the JSON file
             JsonNode rootNode = objectMapper.readTree(new File("src/test/java/TestData/e2eTests.json"));
-            // Retrieve the URL based on the test name
-            return rootNode.path(testName).asText();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read JSON file", e);
-        }
-    }
 
-    // Utility method to capture and attach a screenshot
-    public static void captureScreenshot(String name) {
-        try {
-            byte[] screenshotBytes = ((ChromeDriver) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES);
-            ByteArrayInputStream screenshotStream = new ByteArrayInputStream(screenshotBytes);
-            Allure.addAttachment(name, screenshotStream);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to capture screenshot.", e);
+            // Split the key to support dot notation for nested JSON
+            String[] keys = Data.split("\\.");
+            JsonNode currentNode = rootNode;
+
+            // Traverse through the JSON structure
+            for (String k : keys) {
+                if (currentNode == null || !currentNode.has(k)) {
+                    throw new IllegalArgumentException("Data not found in JSON: " + Data);
+                }
+                currentNode = currentNode.get(k);
+            }
+
+            // Return the value as text if it's a valid node
+            if (currentNode != null && currentNode.isValueNode()) {
+                return currentNode.asText();
+            } else {
+                throw new IllegalArgumentException("The key does not point to a valid value: " + Data);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read JSON file: " , e);
         }
     }
 }

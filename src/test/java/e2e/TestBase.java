@@ -12,20 +12,14 @@ public abstract class  TestBase
 {
     public static WebDriver driver;
 
-    @BeforeMethod
 
-        public void initiateSession(String url)
-        {
-            // Initialize the ChromeDriver
-            driver = new ChromeDriver();
-            // Navigate to a website
-            driver.navigate().to(url);
-            //Maximize current window
-            driver.manage().window().maximize();
-        }
+    @BeforeMethod(alwaysRun = true)
+    public void initializeNewDriverSession()
+    {
+        driver = Factory.initiateSession();
+    }
 
-
-    @AfterMethod
+    @AfterMethod(alwaysRun = true)
     public void tearDownDriverSession()
     {
         Factory.terminateSession();
