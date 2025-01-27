@@ -1,15 +1,18 @@
 package Engine;
 
+import io.qameta.allure.Allure;
 import io.qameta.allure.internal.shadowed.jackson.databind.JsonNode;
 import io.qameta.allure.internal.shadowed.jackson.databind.ObjectMapper;
-
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.io.ByteArrayInputStream;
 import java.io.*;
 import java.nio.file.Paths;
 ;
 
 public class Utils
 {
-
+    public static WebDriver driver;
     // Method to start and stop the Allure server
     public static void startAndStopAllureServe() throws IOException, InterruptedException {
         // Construct the Maven command for running Allure serve
@@ -52,7 +55,8 @@ public class Utils
 
     }
     // Method to read URLs from the JSON file
-    public static String getTestData(String testName) {
+    public static String getTestData(String testName)
+    {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             // Parse the JSON file
@@ -61,6 +65,17 @@ public class Utils
             return rootNode.path(testName).asText();
         } catch (IOException e) {
             throw new RuntimeException("Failed to read JSON file", e);
+        }
+    }
+
+    // Utility method to capture and attach a screenshot
+    public static void captureScreenshot(String name) {
+        try {
+            byte[] screenshotBytes = ((ChromeDriver) driver).getScreenshotAs(org.openqa.selenium.OutputType.BYTES);
+            ByteArrayInputStream screenshotStream = new ByteArrayInputStream(screenshotBytes);
+            Allure.addAttachment(name, screenshotStream);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to capture screenshot.", e);
         }
     }
 }
