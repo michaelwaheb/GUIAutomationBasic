@@ -8,18 +8,18 @@ public class Tests extends TestBase
 {
     // Use the base class method to initiate the session for Google
     @Test
-    public void searchForSelenium()
+    public void test1()
     {
 
     }
 
     @Test
-    public void uploadFile()
+    public void test2()
     {
 
     }
     @Test
-    public void dynamicDisplay()
+    public void test3()
     {
 
     }
